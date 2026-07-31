@@ -1,0 +1,397 @@
+[30.06.2026 23:06] Симкарта Крутой: TargetGroup:AddToggle("Kick", {
+    Text = "Kick",
+    Default = false,
+    Callback = function(on)
+        kickLoopEnabled = on
+
+        if not on then
+            normalKickTimer = nil
+            slowKickTimer = nil
+            fastKickTimer = nil
+            normalGrabCounter = 0
+            slowGrabCounter = 0
+            fastGrabCounter = 0
+            normalOwnerCounter = 0
+            slowOwnerCounter = 0
+            fastOwnerCounter = 0
+
+            task.spawn(function()
+                if selectedKickPlayer and selectedKickPlayer.Character then
+                    local targetRoot = selectedKickPlayer.Character:FindFirstChild("HumanoidRootPart")
+                    if targetRoot then
+                        pcall(function()
+                            local GrabEvents = ReplicatedStorage:WaitForChild("GrabEvents")
+                            GrabEvents.DestroyGrabLine:FireServer(targetRoot)
+                        end)
+                    end
+                end
+            end)
+            return
+        end
+
+        task.spawn(function()
+            local GrabEvents = ReplicatedStorage:WaitForChild("GrabEvents")
+            local SetNetworkOwner = GrabEvents:WaitForChild("SetNetworkOwner")
+
+            local myRoot = Player.Character and Player.Character:FindFirstChild("HumanoidRootPart")
+            if not myRoot then
+                kickLoopEnabled = false
+                return
+            end
+
+            local anchors = {}
+            local orients = {}
+            local grabLineCreated = false
+            local grabStartTime = 0
+
+            while kickLoopEnabled do
+                local target = selectedKickPlayer
+                if not target or not target.Parent then
+                    break
+                end
+
+                local myCharacter = Player.Character
+                myRoot = myCharacter and myCharacter:FindFirstChild("HumanoidRootPart")
+                if not myRoot then
+                    break
+                end
+
+                local targetCharacter = target.Character
+                local targetRoot = targetCharacter and targetCharacter:FindFirstChild("HumanoidRootPart")
+                local targetHumanoid = targetCharacter and targetCharacter:FindFirstChild("Humanoid")
+
+                if targetRoot and targetHumanoid and targetHumanoid.Health > 0 then
+                    local distance = (myRoot.Position - targetRoot.Position).Magnitude
+
+                    if distance > 25 then
+                        myRoot.CFrame = targetRoot.CFrame * CFrame.new(0, 0, 2)
+                        myRoot.Velocity = Vector3.zero
+                    end
+
+                    local targetY = math.min(kickOffsetY, 20)
+                    local targetPos = myRoot.Position + Vector3.new(kickOffsetX, targetY, kickOffsetZ)
+
+                    if SelectedKickMode == "Fast" then
+                        if not fastKickTimer then
+                            fastKickTimer = tick()
+                            fastGrabCounter = 0
+                            fastOwnerCounter = 0
+                        end
+                        if tick() - fastKickTimer >= 0.02 then
+                            fastKickTimer = tick()
+                            fastGrabCounter = fastGrabCounter + 1
+                            fastOwnerCounter = fastOwnerCounter + 1
+
+                            if fastOwnerCounter <= 1 then
+                                for _, part in pairs(targetCharacter:GetChildren()) do
+                                    if part:IsA("BasePart") then
+                                        pcall(function()
+                                            SetNetworkOwner:FireServer(part, part.CFrame)
+                                        end)
+                                    end
+                                end
+                            end
+                            if fastOwnerCounter >= 1 then
+                                fastOwnerCounter = 0
+                            end
+[30.06.2026 23:06] Симкарта Крутой: if fastGrabCounter <= 1 then
+                                if not grabLineCreated then
+                                    targetHumanoid.PlatformStand = true
+                                    GrabEvents.SetNetworkOwner:FireServer(targetRoot, myRoot.CFrame)
+                                    task.wait()
+                                    GrabEvents.CreateGrabLine:FireServer(targetRoot, Vector3.zero, targetPos, false)
+                                    grabLineCreated = true
+                                    grabStartTime = tick()
+                                end
+                            end
+
+                            if grabLineCreated and fastGrabCounter <= 1 then
+                                pcall(function()
+                                    GrabEvents.DestroyGrabLine:FireServer(targetRoot)
+                                end)
+                                grabLineCreated = false
+                            end
+
+                            if fastGrabCounter >= 1 then
+                                fastGrabCounter = 0
+                            end
+                        end
+
+                        local anchorCount = 10
+
+                        while #anchors > anchorCount do
+                            local a = table.remove(anchors)
+                            if a and a.Parent then a:Destroy() end
+                        end
+                        while #orients > anchorCount do
+                            local o = table.remove(orients)
+                            if o and o.Parent then o:Destroy() end
+                        end
+
+                        for i = 1, anchorCount do
+                            if not anchors[i] or not anchors[i].Parent then
+                                if anchors[i] then anchors[i]:Destroy() end
+
+                                local anchor = Instance.new("AlignPosition")
+                                anchor.Name = "KickAnchor_" .. i
+                                anchor.Mode = Enum.PositionAlignmentMode.OneAttachment
+                                anchor.MaxForce = 1e12
+                                anchor.MaxVelocity = 100000
+                                anchor.Responsiveness = 5000
+
+                                local att = Instance.new("Attachment", targetRoot)
+                                anchor.Attachment0 = att
+                                anchor.Parent = targetRoot
+                                anchors[i] = anchor
+
+                                local orient = Instance.new("AlignOrientation")
+                                orient.Name = "KickOrient_" .. i
+                                orient.Mode = Enum.OrientationAlignmentMode.OneAttachment
+                                orient.MaxTorque = 1e12
+                                orient.MaxAngularVelocity = 100000
+                                orient.Responsiveness = 5000
+
+                                local att2 = Instance.new("Attachment", targetRoot)
+                                orient.Attachment0 = att2
+                                orient.Parent = targetRoot
+                                orients[i] = orient
+                            end
+
+                            anchors[i].Position = targetPos
+                            orients[i].CFrame = targetRoot.CFrame
+                        end
+
+                    elseif SelectedKickMode == "Normal" then
+                        if not normalKickTimer then
+                            normalKickTimer = tick()
+                            normalGrabCounter = 0
+                            normalOwnerCounter = 0
+                        end
+                        if tick() - normalKickTimer >= 0.041 then
+                            normalKickTimer = tick()
+                            normalGrabCounter = normalGrabCounter + 1
+                            normalOwnerCounter = normalOwnerCounter + 1
+[30.06.2026 23:06] Симкарта Крутой: if normalOwnerCounter <= 1 then
+                                for _, part in pairs(targetCharacter:GetChildren()) do
+                                    if part:IsA("BasePart") then
+                                        pcall(function()
+                                            SetNetworkOwner:FireServer(part, part.CFrame)
+                                        end)
+                                    end
+                                end
+                            end
+                            if normalOwnerCounter >= 1 then
+                                normalOwnerCounter = 0
+                            end
+
+                            if normalGrabCounter <= 25 then
+                                if not grabLineCreated then
+                                    targetHumanoid.PlatformStand = true
+                                    GrabEvents.SetNetworkOwner:FireServer(targetRoot, myRoot.CFrame)
+                                    task.wait()
+                                    GrabEvents.CreateGrabLine:FireServer(targetRoot, Vector3.zero, targetPos, false)
+                                    grabLineCreated = true
+                                    grabStartTime = tick()
+                                end
+                            end
+
+                            if grabLineCreated and normalGrabCounter <= 25 then
+                                pcall(function()
+                                    GrabEvents.DestroyGrabLine:FireServer(targetRoot)
+                                end)
+                                grabLineCreated = false
+                            end
+
+                            if normalGrabCounter >= 25 then
+                                normalGrabCounter = 0
+                            end
+                        end
+
+                        local anchorCount = 15
+
+                        while #anchors > anchorCount do
+                            local a = table.remove(anchors)
+                            if a and a.Parent then a:Destroy() end
+                        end
+                        while #orients > anchorCount do
+                            local o = table.remove(orients)
+                            if o and o.Parent then o:Destroy() end
+                        end
+
+                        for i = 1, anchorCount do
+                            if not anchors[i] or not anchors[i].Parent then
+                                if anchors[i] then anchors[i]:Destroy() end
+
+                                local anchor = Instance.new("AlignPosition")
+                                anchor.Name = "KickAnchor_" .. i
+                                anchor.Mode = Enum.PositionAlignmentMode.OneAttachment
+                                anchor.MaxForce = 1e12
+                                anchor.MaxVelocity = 100000
+                                anchor.Responsiveness = 5000
+
+                                local att = Instance.new("Attachment", targetRoot)
+                                anchor.Attachment0 = att
+                                anchor.Parent = targetRoot
+                                anchors[i] = anchor
+
+                                local orient = Instance.new("AlignOrientation")
+                                orient.Name = "KickOrient_" .. i
+                                orient.Mode = Enum.OrientationAlignmentMode.OneAttachment
+                                orient.MaxTorque = 1e12
+                                orient.MaxAngularVelocity = 100000
+                                orient.Responsiveness = 5000
+
+                                local att2 = Instance.new("Attachment", targetRoot)
+                                orient.Attachment0 = att2
+                                orient.Parent = targetRoot
+                                orients[i] = orient
+                            end
+
+                            anchors[i].Position = targetPos
+                            orients[i].CFrame = targetRoot.CFrame
+                        end
+[30.06.2026 23:06] Симкарта Крутой: elseif SelectedKickMode == "Slow" then
+                        if not slowKickTimer then
+                            slowKickTimer = tick()
+                            slowGrabCounter = 0
+                            slowOwnerCounter = 0
+                        end
+                        if tick() - slowKickTimer >= 0.041 then
+                            slowKickTimer = tick()
+                            slowGrabCounter = slowGrabCounter + 1
+                            slowOwnerCounter = slowOwnerCounter + 1
+
+                            if slowOwnerCounter <= 1 then
+                                for _ = 1, 2 do
+                                    for _, part in pairs(targetCharacter:GetChildren()) do
+                                        if part:IsA("BasePart") then
+                                            pcall(function()
+                                                SetNetworkOwner:FireServer(part, part.CFrame)
+                                            end)
+                                        end
+                                    end
+                                end
+                            end
+                            if slowOwnerCounter >= 2 then
+                                slowOwnerCounter = 0
+                            end
+
+                            if slowGrabCounter <= 13 then
+                                if not grabLineCreated then
+                                    targetHumanoid.PlatformStand = true
+                                    GrabEvents.SetNetworkOwner:FireServer(targetRoot, myRoot.CFrame)
+                                    task.wait()
+                                    GrabEvents.CreateGrabLine:FireServer(targetRoot, Vector3.zero, targetPos, false)
+                                    grabLineCreated = true
+                                    grabStartTime = tick()
+                                end
+                            end
+
+                            if grabLineCreated and slowGrabCounter <= 25 then
+                                pcall(function()
+                                    GrabEvents.DestroyGrabLine:FireServer(targetRoot)
+                                end)
+                                grabLineCreated = false
+                            end
+
+                            if slowGrabCounter >= 25 then
+                                slowGrabCounter = 0
+                            end
+                        end
+
+                        local anchorCount = 25
+
+                        while #anchors > anchorCount do
+                            local a = table.remove(anchors)
+                            if a and a.Parent then a:Destroy() end
+                        end
+                        while #orients > anchorCount do
+                            local o = table.remove(orients)
+                            if o and o.Parent then o:Destroy() end
+                        end
+
+                        for i = 1, anchorCount do
+                            if not anchors[i] or not anchors[i].Parent then
+                                if anchors[i] then anchors[i]:Destroy() end
+
+                                local anchor = Instance.new("AlignPosition")
+                                anchor.Name = "KickAnchor_" .. i
+                                anchor.Mode = Enum.PositionAlignmentMode.OneAttachment
+                                anchor.MaxForce = 1e12
+                                anchor.MaxVelocity = 100000
+                                anchor.Responsiveness = 5000
+
+                                local att = Instance.new("Attachment", targetRoot)
+                                anchor.Attachment0 = att
+                                anchor.Parent = targetRoot
+                                anchors[i] = anchor
+
+                                local orient = Instance.new("AlignOrientation")
+[30.06.2026 23:06] Симкарта Крутой: orient.Name = "KickOrient_" .. i
+                                orient.Mode = Enum.OrientationAlignmentMode.OneAttachment
+                                orient.MaxTorque = 1e12
+                                orient.MaxAngularVelocity = 100000
+                                orient.Responsiveness = 5000
+
+                                local att2 = Instance.new("Attachment", targetRoot)
+                                orient.Attachment0 = att2
+                                orient.Parent = targetRoot
+                                orients[i] = orient
+                            end
+
+                            anchors[i].Position = targetPos
+                            orients[i].CFrame = targetRoot.CFrame
+                        end
+                    end
+
+                    if tick() - grabStartTime > 0.2 then
+                        -- защита от зависания
+                    end
+
+                else
+                    grabLineCreated = false
+                    grabStartTime = 0
+
+                    for _, a in pairs(anchors) do
+                        if a and a.Parent then a:Destroy() end
+                    end
+                    anchors = {}
+
+                    for _, o in pairs(orients) do
+                        if o and o.Parent then o:Destroy() end
+                    end
+                    orients = {}
+
+                    if targetRoot then
+                        pcall(function()
+                            GrabEvents.DestroyGrabLine:FireServer(targetRoot)
+                        end)
+                    end
+                end
+
+                task.wait(0.01)
+            end
+
+            for _, a in pairs(anchors) do
+                if a and a.Parent then a:Destroy() end
+            end
+            anchors = {}
+
+            for _, o in pairs(orients) do
+                if o and o.Parent then o:Destroy() end
+            end
+            orients = {}
+
+            if selectedKickPlayer and selectedKickPlayer.Character then
+                local targetRoot = selectedKickPlayer.Character:FindFirstChild("HumanoidRootPart")
+                if targetRoot then
+                    pcall(function()
+                        GrabEvents.DestroyGrabLine:FireServer(targetRoot)
+                    end)
+                end
+            end
+
+            kickLoopEnabled = false
+        end)
+    end
+})
