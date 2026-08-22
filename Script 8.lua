@@ -77,12 +77,12 @@ LeftGroupbox:AddToggle("EnableAudio", {
     Text = "Enable Audio",
     Default = false
 })
-SpeedGroup:AddSlider({
+local Slider = Groupbox:AddSlider("Sensitivity", {
     Text = "WalkSpeed",
-    Min = 1,
-    Max = 200,
     Default = 16,
-    Precision = 1,
+    Min = 0,
+    Max = 200,
+    Rounding = 0,
     Func = function(Value)
         if selectedPlrName == nil then return end
         local targetPlayer = game.Players:FindFirstChild(selectedPlrName)
@@ -92,5 +92,5 @@ SpeedGroup:AddSlider({
                 humanoid.WalkSpeed = Value
             end
         end
-    end    
+    end
 })
