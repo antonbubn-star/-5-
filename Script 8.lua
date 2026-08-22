@@ -61,7 +61,7 @@ local Window = Library:CreateWindow({
     Footer = "by cimkarta",
     Icon = 9174663321,
     NotifySide = "Right",
-    ShowCustomCursor = true,
+    ShowCustomCursor = false,
   })
 Window:SetBackgroundImage("rbxassetid://86870310824805") 
 
@@ -78,20 +78,3 @@ local LeftGroupbox = playerTab:AddGroupbox({
     Side = "Left",
     Name = "Settings",
     IconName = "wrench",
-})
-LeftGroupbox:AddToggle("EnableAudio", {
-    Text = "Enable Audio",
-    Default = false
-})
-local AudioSettings = LeftGroupbox:AddDependencyBox()
-AudioSettings:AddSlider("Volume", {
-    Text = "Volume",
-    Default = 50,
-    Min = 0,
-    Max = 100,
-    Rounding = 0
-})
-AudioSettings:SetupDependencies({
-    { Toggles.EnableAudio, true }, -- Only show if EnableAudio is true
-    -- { Options.AudioMode, "Stereo" } -- And also only show if AudioMode is Stereo
-})
