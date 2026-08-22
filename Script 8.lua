@@ -69,14 +69,5 @@ local Window = Library:CreateWindow({
     NotifySide = "Right",
     ShowCustomCursor = true,
   })
-Window:SetBackgroundImage("rbxassetid://86870310824805")
- 
-
-Library:Notify({
-		Title = title or "Notification",
-		Description = content or "",
-		Time = duration or 5,
-	})
-end
-
+Window:SetBackgroundImage("rbxassetid://86870310824805") 
 local Tab = Window:AddTab("Main", "user")
