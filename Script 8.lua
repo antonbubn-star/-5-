@@ -65,12 +65,22 @@ local Window = Library:CreateWindow({
   })
 Window:SetBackgroundImage("rbxassetid://86870310824805") 
 local Tab = Window:AddTab("Main", "user")
-local LeftGroupBox = Tab:AddGroupbox({
-    Side = "Left", -- case-insensitive
-    Name = "Player",
-    Description = "",
-    IconName = "",
-    -- Visible = true,
-    -- Collapsed = false,
-    -- DisableCollapsing = false,
+local SpeedGroup = MainTab:CreateGroupbox("Values")
+
+SpeedGroup:AddSlider({
+    Text = "WalkSpeed",
+    Min = 1,
+    Max = 200,
+    Default = 16,
+    Precision = 1,
+    Func = function(Value)
+        if selectedPlrName == nil then return end
+        local targetPlayer = game.Players:FindFirstChild(selectedPlrName)
+        if targetPlayer and targetPlayer.Character then
+            local humanoid = targetPlayer.Character:FindFirstChild("Humanoid")
+            if humanoid then
+                humanoid.WalkSpeed = Value
+            end
+        end
+    end    
 })
