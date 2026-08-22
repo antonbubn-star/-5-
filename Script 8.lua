@@ -43,8 +43,9 @@ loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/
   Library.ForceCheckbox = false
 
   local Window = Library:CreateWindow({
-    Title = "",
-    Footer = "",
+    Title = "kirpich",
+    Footer = "by cimkarta",
+    Icon = 9174663321,
     NotifySide = "Right",
     ShowCustomCursor = true,
   })
