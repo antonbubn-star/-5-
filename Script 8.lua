@@ -30,4 +30,14 @@ local SetLineColor = RS.DataEvents:FindFirstChild("UpdateLineColorsEvent") or RS
 local SpawnToyRemote = RS.MenuToys:FindFirstChild("SpawnToyRemoteFunction") or RS.MenuToys:WaitForChild("SpawnToyRemoteFunction")
 local DestroyGrabLine = RS.GrabEvents:FindFirstChild("DestroyGrabLine") or RS.GrabEvents:WaitForChild("DestroyGrabLine")
 local RagdollRemote = RS.CharacterEvents:FindFirstChild("RagdollRemote") or RS.CharacterEvents:WaitForChild("RagdollRemote")
-   
+game.Players.LocalPlayer.PlayerScripts.CharacterAndBeamMove.Enabled = false
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local CoreGui = game:GetService("CoreGui")
+loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+local Window = Library:CreateWindow({
+    Title = "kirpish",
+    Footer = "version: example",
+    Icon = 133934159643782,
+    NotifySide = "Right",
+})
