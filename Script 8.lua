@@ -79,8 +79,7 @@ Library:Notify({
 	})
 end
 
-local Tab = {
-    Main = Window:AddTab("Main", "user"),  }
+local Tab = Window:AddTab("Main", "user")
 local LeftGroupBox = Tab:AddGroupbox({
     Side = "Left", -- case-insensitive
     Name = "Home",
