@@ -78,3 +78,4 @@ local LeftGroupbox = playerTab:AddGroupbox({
     Side = "Left",
     Name = "Settings",
     IconName = "wrench",
+})
