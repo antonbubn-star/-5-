@@ -53,15 +53,9 @@ function notify(title, content, duration)
 	Library:Notify({ Title = title or "Notification", Content = content or "", Duration = duration or 5,
 	 })
 end
-local DraggableLabel = Library:AddDraggableLabel("Obsidian demo")
-
-
 local Options = Library.Options
   local Toggles = Library.Toggles
-
   Library.ForceCheckbox = false
-
-
 local Window = Library:CreateWindow({
     Title = "kirpich",
     Footer = "by cimkarta",
@@ -71,3 +65,12 @@ local Window = Library:CreateWindow({
   })
 Window:SetBackgroundImage("rbxassetid://86870310824805") 
 local Tab = Window:AddTab("Main", "user")
+local LeftGroupBox = Tab:AddGroupbox({
+    Side = "Left", -- case-insensitive
+    Name = "Groupbox",
+    Description = "Optional subtitle under the title",
+    IconName = "boxes",
+    -- Visible = true,
+    -- Collapsed = false,
+    -- DisableCollapsing = false,
+})
