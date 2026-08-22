@@ -74,58 +74,24 @@ local Tabs = {
 }
 
 
-local SpeedGroup = Player:AddGroupbox({
+local LeftGroupbox = playerTab:AddGroupbox({
     Side = "Left",
-    Name = "Speed Settings",
-    IconName = "speedometer",
+    Name = "Settings",
+    IconName = "wrench",
 })
-
-SpeedGroup:AddToggle("EnableSpeed", {
-    Text = "Enable Speed",
-    Default = false,
-    Func = function(state)
-        PL_SpeedEnabled = state
-        if state then
-            if PL_SpeedConn then PL_SpeedConn:Disconnect() end
-            PL_SpeedConn = game:GetService("RunService").RenderStepped:Connect(function()
-                if not PL_SpeedEnabled then return end
-                local char = game.Players.LocalPlayer.Character
-                local hrp = char and char:FindFirstChild("HumanoidRootPart")
-                local hum = char and char:FindFirstChild("Humanoid")
-                if hrp and hum then
-                    hrp.CFrame = hrp.CFrame + hum.MoveDirection * (PL_SpeedValue * 0.1)
-                end
-            end)
-        else
-            if PL_SpeedConn then
-                PL_SpeedConn:Disconnect()
-                PL_SpeedConn = nil
-            end
-        end
-    end
+LeftGroupbox:AddToggle("EnableAudio", {
+    Text = "Enable Audio",
+    Default = false
 })
-
-local SpeedSettings = SpeedGroup:AddDependencyGroupbox()
-
-SpeedSettings:AddSlider("WalkSpeed", {
-    Text = "Walk Speed",
-    Min = 1,
-    Max = 200,
-    Default = 16,
-    Rounding = 0,
-    Func = function(value)
-        PL_SpeedValue = value
-        if PL_SpeedEnabled then
-            local char = game.Players.LocalPlayer.Character
-            local hrp = char and char:FindFirstChild("HumanoidRootPart")
-            local hum = char and char:FindFirstChild("Humanoid")
-            if hrp and hum then
-                hrp.CFrame = hrp.CFrame + hum.MoveDirection * (PL_SpeedValue * 0.1)
-            end
-        end
-    end
+local AudioSettings = LeftGroupbox:AddDependencyBox()
+AudioSettings:AddSlider("Volume", {
+    Text = "Volume",
+    Default = 50,
+    Min = 0,
+    Max = 100,
+    Rounding = 0
 })
-
-SpeedSettings:SetupDependencies({
-    { SpeedGroup.EnableSpeed, true },
+AudioSettings:SetupDependencies({
+    { Toggles.EnableAudio, true }, -- Only show if EnableAudio is true
+    -- { Options.AudioMode, "Stereo" } -- And also only show if AudioMode is Stereo
 })
