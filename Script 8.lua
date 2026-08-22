@@ -65,4 +65,59 @@ local Window = Library:CreateWindow({
   })
 Window:SetBackgroundImage("rbxassetid://86870310824805") 
 local Tab = Window:AddTab("Main", "user")
+local Toggles = Library.Toggles
+local LeftGroupbox = MainTab:AddGroupbox({
+    Side = "Left",
+    Name = "Settings",
+    IconName = "wrench",
+})
 
+LeftGroupbox:AddToggle("EnableSpeed", {
+    Text = "Enable Speed",
+    Default = false,
+    Func = function(state)
+        PL_SpeedEnabled = state
+        if state then
+            if PL_SpeedConn then PL_SpeedConn:Disconnect() end
+            PL_SpeedConn = game:GetService("RunService").RenderStepped:Connect(function()
+                if not PL_SpeedEnabled then return end
+                local char = game.Players.LocalPlayer.Character
+                local hrp = char and char:FindFirstChild("HumanoidRootPart")
+                local hum = char and char:FindFirstChild("Humanoid")
+                if hrp and hum then
+                    hrp.CFrame = hrp.CFrame + hum.MoveDirection * (PL_SpeedValue * 0.1)
+                end
+            end)
+        else
+            if PL_SpeedConn then
+                PL_SpeedConn:Disconnect()
+                PL_SpeedConn = nil
+            end
+        end
+    end
+})
+
+local SpeedSettings = LeftGroupbox:AddDependencyGroupbox()
+
+SpeedSettings:AddSlider("WalkSpeed", {
+    Text = "Walk Speed",
+    Min = 1,
+    Max = 200,
+    Default = 16,
+    Rounding = 0,
+    Func = function(value)
+        PL_SpeedValue = value
+        if PL_SpeedEnabled then
+            local char = game.Players.LocalPlayer.Character
+            local hrp = char and char:FindFirstChild("HumanoidRootPart")
+            local hum = char and char:FindFirstChild("Humanoid")
+            if hrp and hum then
+                hrp.CFrame = hrp.CFrame + hum.MoveDirection * (PL_SpeedValue * 0.1)
+            end
+        end
+    end
+})
+
+SpeedSettings:SetupDependencies({
+    { Toggles.EnableSpeed, true },
+})
