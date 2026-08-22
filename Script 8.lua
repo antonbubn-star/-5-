@@ -37,12 +37,32 @@ local LocalPlayer = Players.LocalPlayer
 local CoreGui = game:GetService("CoreGui")
 loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
 
-  local Options = Library.Options
+ local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local StarterGui = game:GetService("StarterGui")
+local PS = game:GetService("Players")
+local RS = game:GetService("ReplicatedStorage")
+local R = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local Workspace = workspace
+local Player = PS.LocalPlayer
+local Camera = Workspace.CurrentCamera
+local CE = RS:WaitForChild("CharacterEvents", 10)
+local BeingHeld = Player:WaitForChild("IsHeld", 10)
+local StruggleEvent = CE and CE:WaitForChild("Struggle")
+function notify(title, content, duration)
+	Library:Notify({ Title = title or "Notification", Content = content or "", Duration = duration or 5,
+	 })
+end
+
+
+
+local Options = Library.Options
   local Toggles = Library.Toggles
 
   Library.ForceCheckbox = false
 
-  local Window = Library:CreateWindow({
+
+local Window = Library:CreateWindow({
     Title = "kirpich",
     Footer = "by cimkarta",
     Icon = 9174663321,
