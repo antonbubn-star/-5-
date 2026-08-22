@@ -86,7 +86,7 @@ Library:Notify({
 	})
 end
 local MainGroup = Tabs.Main:AddLeftGroupbox("Main")
-MainGroup:AddSlider({
+local Slider = Groupbox:AddSlider({
         Name = "WalkSpeed",
         Min = 1,
         Max = 200,
