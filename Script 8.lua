@@ -63,6 +63,35 @@ local Window = Library:CreateWindow({
     NotifySide = "Right",
     ShowCustomCursor = false,
   })
+local guiVisible = true
+
+local function toggleGUI()
+    guiVisible = not guiVisible
+    Window:SetVisible(guiVisible)
+    
+    Library:Notify({
+        Title = "GUI",
+        Content = guiVisible and "GUI opened" or "GUI closed",
+        Duration = 2
+    })
+end
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    
+    if input.KeyCode == Enum.KeyCode.Tab then
+        toggleGUI()
+    end
+end)
+
+Library:Notify({
+    Title = "kirpich",
+    Content = "Press TAB to open/close GUI",
+    Duration = 5
+})
+
+
+
 local Tabs = {
 	Player = Window:AddTab("player", "user"),
 	Defense = Window:AddTab("defense", "shield"),
