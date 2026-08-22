@@ -65,5 +65,5 @@ local Window = Library:CreateWindow({
   })
 Window:SetBackgroundImage("rbxassetid://86870310824805") 
 
-local SpeedGroup = Player:AddGroupbox("Speed Settings", "speedometer", "Left")
+local PlayerView = Tabs.Player:AddLeftGroupbox("View & Movement")
 
