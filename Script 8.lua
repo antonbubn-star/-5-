@@ -35,9 +35,15 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local CoreGui = game:GetService("CoreGui")
 loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
-local Window = Library:CreateWindow({
-    Title = "kirpish",
-    Footer = "version: example",
-    Icon = 133934159643782,
+
+  local Options = Library.Options
+  local Toggles = Library.Toggles
+
+  Library.ForceCheckbox = false
+
+  local Window = Library:CreateWindow({
+    Title = "",
+    Footer = "",
     NotifySide = "Right",
-})
+    ShowCustomCursor = true,
+  })
