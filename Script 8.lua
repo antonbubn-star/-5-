@@ -65,14 +65,7 @@ local Window = Library:CreateWindow({
   })
 Window:SetBackgroundImage("rbxassetid://86870310824805") 
 
-local Tabs = {
-	Player = Window:AddTab("player", "user"),	Misc = Window:AddTab("misc", "layers"),
-	Defense = Window:AddTab("defense", "shield"),
-	Target = Window:AddTab("target", "crosshair"),
-	Grab = Window:AddTab("grab", "hand"),
-	
-}
-
+local SpeedGroup = Player:AddGroupbox("Speed Settings", "speedometer", "Left")
 
 local LeftGroupbox = playerTab:AddGroupbox({
     Side = "Left",
