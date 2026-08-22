@@ -67,9 +67,9 @@ Window:SetBackgroundImage("rbxassetid://86870310824805")
 local Tab = Window:AddTab("Main", "user")
 local LeftGroupBox = Tab:AddGroupbox({
     Side = "Left", -- case-insensitive
-    Name = "Groupbox",
-    Description = "Optional subtitle under the title",
-    IconName = "boxes",
+    Name = "Player",
+    Description = "",
+    IconName = "",
     -- Visible = true,
     -- Collapsed = false,
     -- DisableCollapsing = false,
