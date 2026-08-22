@@ -53,7 +53,7 @@ function notify(title, content, duration)
 	Library:Notify({ Title = title or "Notification", Content = content or "", Duration = duration or 5,
 	 })
 end
-
+local DraggableLabel = Library:AddDraggableLabel("Obsidian demo")
 
 
 local Options = Library.Options
@@ -85,17 +85,5 @@ Library:Notify({
 		Time = duration or 5,
 	})
 end
-local MainGroup = Tabs.Main:AddLeftGroupbox("Main")
-local Slider = Groupbox:AddSlider({
-        Name = "WalkSpeed",
-        Min = 1,
-        Max = 200,
-        Default = 16,
-        Color = Color3.fromRGB(0, 0, 255),
-        Increment = 10,
-        ValueName = "bananas",
-        Callback = function(Value)
-            if selectedPlrName == nil then return end
-            game.Players[selectedPlrName].Character.Humanoid.WalkSpeed = Value 
-        end    
-    })
+
+
