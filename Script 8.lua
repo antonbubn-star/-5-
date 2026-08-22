@@ -79,9 +79,10 @@ Window:SetBackgroundImage("rbxassetid://86870310824805")
     ["UI Settings"] = Window:AddTab("UI Settings", "settings")
   }
 
-local Toggles = Library.Toggles
-local LeftGroupbox = MainTab:AddGroupbox({
-    Side = "Left",
-    Name = "Settings",
-    IconName = "wrench",
-})
+Library:Notify({
+		Title = title or "Notification",
+		Description = content or "",
+		Time = duration or 5,
+	})
+end
+local DefenseGroup = Tabs.Main:AddLeftGroupbox("Main")
