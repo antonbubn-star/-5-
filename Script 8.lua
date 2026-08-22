@@ -65,23 +65,4 @@ local Window = Library:CreateWindow({
   })
 Window:SetBackgroundImage("rbxassetid://86870310824805") 
 local Tab = Window:AddTab("Main", "user")
-local SpeedGroup = MainTab:CreateGroupbox("Values")
 
-DependencyBox:SetupDependencies(dependencies)
-local Slider = Groupbox:AddSlider("Sensitivity", {
-    Text = "WalkSpeed",
-    Default = 16,
-    Min = 0,
-    Max = 200,
-    Rounding = 0,
-    Func = function(Value)
-        if selectedPlrName == nil then return end
-        local targetPlayer = game.Players:FindFirstChild(selectedPlrName)
-        if targetPlayer and targetPlayer.Character then
-            local humanoid = targetPlayer.Character:FindFirstChild("Humanoid")
-            if humanoid then
-                humanoid.WalkSpeed = Value
-            end
-        end
-    end
-})
