@@ -63,6 +63,13 @@ local Window = Library:CreateWindow({
     NotifySide = "Right",
     ShowCustomCursor = false,
   })
+local Tabs = {
+	Player = Window:AddTab("player", "user"),
+	Defense = Window:AddTab("defense", "shield"),
+	Target = Window:AddTab("target", "crosshair"),
+	Grab = Window:AddTab("grab", "hand")
+	Misc = Window:AddTab("misc", "layers"),
+}
 Window:SetBackgroundImage("rbxassetid://86870310824805") 
 
 local PlayerView = Tabs.Player:AddLeftGroupbox("View & Movement")
