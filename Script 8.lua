@@ -67,16 +67,7 @@ Window:SetBackgroundImage("rbxassetid://86870310824805")
 local Tab = Window:AddTab("Main", "user")
 local SpeedGroup = MainTab:CreateGroupbox("Values")
 
-local Toggles = Library.Toggles
-local LeftGroupbox = MainTab:AddGroupbox({
-    Side = "Left",
-    Name = "Settings",
-    IconName = "wrench",
-})
-LeftGroupbox:AddToggle("EnableAudio", {
-    Text = "Enable Audio",
-    Default = false
-})
+DependencyBox:SetupDependencies(dependencies)
 local Slider = Groupbox:AddSlider("Sensitivity", {
     Text = "WalkSpeed",
     Default = 16,
