@@ -70,3 +70,18 @@ local Window = Library:CreateWindow({
     ShowCustomCursor = true,
   })
 Window:SetBackgroundImage("rbxassetid://86870310824805")
+ local Tabs = {
+    Main = Window:AddTab("Main", "user"),
+	Defense = Window:AddTab("defense", "shield"),
+    Target = Window:AddTab("target", "crosshair"),
+    Grab = Window:AddTab("grab", "hand"),
+    Misc = Window:AddTab("misc", "box"),
+    ["UI Settings"] = Window:AddTab("UI Settings", "settings")
+  }
+
+local Toggles = Library.Toggles
+local LeftGroupbox = MainTab:AddGroupbox({
+    Side = "Left",
+    Name = "Settings",
+    IconName = "wrench",
+})
