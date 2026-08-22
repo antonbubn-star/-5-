@@ -67,8 +67,3 @@ Window:SetBackgroundImage("rbxassetid://86870310824805")
 
 local SpeedGroup = Player:AddGroupbox("Speed Settings", "speedometer", "Left")
 
-local LeftGroupbox = playerTab:AddGroupbox({
-    Side = "Left",
-    Name = "Settings",
-    IconName = "wrench",
-})
