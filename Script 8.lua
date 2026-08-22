@@ -49,3 +49,4 @@ loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/
     NotifySide = "Right",
     ShowCustomCursor = true,
   })
+Window:SetBackgroundImage("rbxasset://6675756842")
