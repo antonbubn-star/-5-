@@ -74,4 +74,8 @@ local Tabs = {
 }
 
 
-local MainGroup = Tabs.PlayerAddLeftGroupbox("Main")
+local LeftGroupbox = PlayerTab:AddGroupbox({
+    Side = "Left",
+    Name = "Settings",
+    IconName = "wrench",
+})
