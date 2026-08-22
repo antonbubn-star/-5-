@@ -85,4 +85,17 @@ Library:Notify({
 		Time = duration or 5,
 	})
 end
-local DefenseGroup = Tabs.Main:AddLeftGroupbox("Main")
+local MainGroup = Tabs.Main:AddLeftGroupbox("Main")
+MainGroup:AddSlider({
+        Name = "WalkSpeed",
+        Min = 1,
+        Max = 200,
+        Default = 16,
+        Color = Color3.fromRGB(0, 0, 255),
+        Increment = 10,
+        ValueName = "bananas",
+        Callback = function(Value)
+            if selectedPlrName == nil then return end
+            game.Players[selectedPlrName].Character.Humanoid.WalkSpeed = Value 
+        end    
+    })
